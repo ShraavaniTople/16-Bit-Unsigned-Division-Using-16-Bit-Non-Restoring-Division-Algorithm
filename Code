@@ -1,0 +1,57 @@
+timescale 1ns / 1ps
+
+module Division_tb;
+
+    reg clk;
+    reg sign;
+    reg [15:0] dividend;
+    reg [15:0] divider;
+    wire ready;
+    wire [15:0] quotient;
+    wire [15:0] remainder;
+
+    integer i;
+
+    // Instantiate the Unit Under Test (UUT)
+    divide16 uut (
+        .clk(clk),
+        .sign(sign),
+        .dividend(dividend),
+        .divider(divider),
+        .ready(ready),
+        .quotient(quotient),
+        .remainder(remainder)
+    );
+
+    // Clock generation
+    always #5 clk = ~clk;
+
+    // Dump signals to VCD file
+    initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, Division_tb);
+
+        // Test cases
+        // Test case 1: Unsigned division (dividend = 4, divider = 2)
+        sign = 1'b0;
+        dividend = 16'd4;
+        divider = 16'd2;
+        #200;
+
+        // Test case 2: Signed division (dividend = 8, divider = 2)
+        sign = 1'b1;
+        dividend = 16'd8;
+        divider = 16'd2;
+        #200;
+
+        // Test case 3: Remainder (dividend = 16, divider = 5)
+        sign = 1'b0;
+        dividend = 16'd16;
+        divider = 16'd5;
+        #200;
+
+        // Stop simulation
+        $stop;
+    end
+
+endmodule
